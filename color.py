@@ -7,7 +7,7 @@ import numpy as np
 import cv2 as cv
 
 
-def check_8bytes_bound(x):
+def check_8bytes_bounds(x):
     x = np.rint(x)
 
     if x > 255:
@@ -23,9 +23,9 @@ def calculate_rgb_to_yiq(r, g, b):
     i = 0.596 * r - 0.274 * g - 0.322 * b
     q = 0.211 * r - 0.523 * g + 0.312 * b
 
-    y = check_8bytes_bound(y)
-    i = check_8bytes_bound(i)
-    q = check_8bytes_bound(q)
+    y = check_8bytes_bounds(y)
+    i = check_8bytes_bounds(i)
+    q = check_8bytes_bounds(q)
 
     return y, i, q
 
@@ -57,9 +57,9 @@ def calculate_yiq_to_rgb(y, i, q):
     g = y - 0.272 * i - 0.647 * q
     b = y - 1.106 * i + 1.703 * q
 
-    r = check_8bytes_bound(r)
-    g = check_8bytes_bound(g)
-    b = check_8bytes_bound(b)
+    r = check_8bytes_bounds(r)
+    g = check_8bytes_bounds(g)
+    b = check_8bytes_bounds(b)
 
     return r, g, b
 
@@ -110,7 +110,7 @@ def mono_blue(image):
 
 def calculate_rgb_to_gray(r, g, b):
     gray = 0.299 * r + 0.587 * g + 0.114 * b
-    return check_8bytes_bound(gray)
+    return check_8bytes_bounds(gray)
 
 
 def rgb_to_gray(image):
@@ -142,3 +142,35 @@ def rgb_to_negative(image):
     negative[:, :, 0] = 255 - image[:, :, 0]
 
     return negative
+
+
+def calculate_add_bright(r, g, b, additive):
+    r += additive
+    g += additive
+    b += additive
+
+    r = check_8bytes_bounds(r)
+    g = check_8bytes_bounds(g)
+    b = check_8bytes_bounds(b)
+
+    return r, g, b
+
+
+def additive_brightness(image, additive):
+    bright = np.copy(image)
+    # Get RGB components from the image
+    b, g, r = cv.split(bright)
+
+    width = image.shape[0]
+    height = image.shape[1]
+
+    # Add additive brightness to every R, G and B component
+    for w in range(width):
+        for h in range(height):
+            r[w][h], g[w][h], b[w][h] = calculate_add_bright(r[w][h], g[w][h], b[w][h], additive)
+
+            bright[w][h][2] = r[w][h]
+            bright[w][h][1] = g[w][h]
+            bright[w][h][0] = b[w][h]
+
+    return bright
