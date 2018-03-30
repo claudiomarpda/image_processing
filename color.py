@@ -85,3 +85,24 @@ def yiq_to_rgb(image):
             rgb[w][h][0] = b
 
     return rgb
+
+
+def mono_red(image):
+    mono = np.copy(image)
+    mono[:, :, 1] = 0
+    mono[:, :, 0] = 0
+    return mono
+
+
+def mono_green(image):
+    mono = np.copy(image)
+    mono[:, :, 2] = 0
+    mono[:, :, 0] = 0
+    return mono
+
+
+def mono_blue(image):
+    mono = np.copy(image)
+    mono[:, :, 2] = 0
+    mono[:, :, 1] = 0
+    return mono
