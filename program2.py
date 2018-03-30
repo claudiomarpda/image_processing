@@ -1,4 +1,4 @@
-# Monochrome images in R, G, and B
+# Monochrome images in individual R, G, and B
 
 import cv2 as cv
 import color
@@ -18,6 +18,11 @@ util.write_image("green-" + name, green)
 blue = color.mono_blue(original)
 cv.imshow('Mono Blue', blue)
 util.write_image("blue-" + name, blue)
+
+gray = color.rgb_to_gray(original)
+cv.imshow('Gray', gray)
+util.write_image("gray-" + name, gray)
+
 
 cv.waitKey(0)
 cv.destroyAllWindows()

@@ -106,3 +106,39 @@ def mono_blue(image):
     mono[:, :, 2] = 0
     mono[:, :, 1] = 0
     return mono
+
+
+def calculate_rgb_to_gray(r, g, b):
+    gray = 0.299 * r + 0.587 * g + 0.114 * b
+    return check_8bytes_bound(gray)
+
+
+def rgb_to_gray(image):
+    # Get RGB components from the image
+    b, g, r = cv.split(image)
+
+    # Create an empty matrix with the dimension of the input image
+    gray = np.empty_like(image)
+
+    width = image.shape[0]
+    height = image.shape[1]
+
+    for w in range(width):
+        for h in range(height):
+            gray_unit = calculate_rgb_to_gray(r[w][h], g[w][h], b[w][h])
+            gray[w][h][2] = gray_unit
+            gray[w][h][1] = gray_unit
+            gray[w][h][0] = gray_unit
+
+    return gray
+
+
+def rgb_to_negative(image):
+    # Create an empty matrix with the dimension of the input image
+    negative = np.empty_like(image)
+
+    negative[:, :, 2] = 255 - image[:, :, 2]
+    negative[:, :, 1] = 255 - image[:, :, 1]
+    negative[:, :, 0] = 255 - image[:, :, 0]
+
+    return negative
