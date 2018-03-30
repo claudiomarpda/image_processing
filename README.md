@@ -41,3 +41,7 @@ Note: If the script doesn't run, it may be necessary to give the following permi
 <h2>References</h2>
 
 * https://docs.opencv.org/master/d6/d00/tutorial_py_root.html
+* https://en.wikipedia.org/wiki/YIQ
+* https://en.wikipedia.org/wiki/Negative_(photography)
+* https://en.wikipedia.org/wiki/Grayscale
+* https://en.wikipedia.org/wiki/Thresholding_(image_processing)

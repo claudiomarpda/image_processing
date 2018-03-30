@@ -195,3 +195,48 @@ def additive_brightness(image, factor):
 
 def multiplicative_brightness(image, factor):
     return modify_brightness(image, factor, calculate_mult_bright)
+
+
+def calculate_threshold(y, mean):
+    if y > mean:
+        # White pixel
+        return 255
+    # Black pixel
+    return 0
+
+
+def thresholding(image, mean, y):
+    # Copy image matrix
+    black_white = np.copy(image)
+
+    width = y.shape[0]
+    height = y.shape[1]
+
+    # Iterate the whole image
+    for w in range(width):
+        for h in range(height):
+            y[w][h] = calculate_threshold(y[w][h], mean)
+
+    # Update the output image with thresholding values
+    black_white[:, :, 2] = y
+    black_white[:, :, 1] = y
+    black_white[:, :, 0] = y
+
+    return black_white
+
+
+def thresholding_user(image, mean):
+    # Get YIQ
+    yiq = rgb_to_yiq(image)
+    # Get Y component
+    y = yiq[:, :, 2]
+    return thresholding(image, mean, y)
+
+
+def thresholding_mean(image):
+    # Get YIQ
+    yiq = rgb_to_yiq(image)
+    # Get Y component
+    y = yiq[:, :, 2]
+    mean = np.mean(y)
+    return thresholding(image, mean, y)
