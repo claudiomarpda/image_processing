@@ -9,12 +9,12 @@ import color
 import util
 
 
-ADDITIVE_BRIGHTNESS = 100
+BRIGHTNESS_FACTOR = 100
 
 name = "skate.jpg"
 original = util.read_image(name)
 
-bright = color.additive_brightness(original, ADDITIVE_BRIGHTNESS)
+bright = color.additive_brightness(original, BRIGHTNESS_FACTOR)
 
 cv.imshow('Additive Brightness', bright)
 util.write_image("add-bright-" + name, bright)

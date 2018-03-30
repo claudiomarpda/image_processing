@@ -144,10 +144,10 @@ def rgb_to_negative(image):
     return negative
 
 
-def calculate_add_bright(r, g, b, additive):
-    r += additive
-    g += additive
-    b += additive
+def calculate_add_bright(r, g, b, factor):
+    r += factor
+    g += factor
+    b += factor
 
     r = check_8bytes_bounds(r)
     g = check_8bytes_bounds(g)
@@ -156,7 +156,19 @@ def calculate_add_bright(r, g, b, additive):
     return r, g, b
 
 
-def additive_brightness(image, additive):
+def calculate_mult_bright(r, g, b, factor):
+    r *= factor
+    g *= factor
+    b *= factor
+
+    r = check_8bytes_bounds(r)
+    g = check_8bytes_bounds(g)
+    b = check_8bytes_bounds(b)
+
+    return r, g, b
+
+
+def modify_brightness(image, factor, calculate):
     bright = np.copy(image)
     # Get RGB components from the image
     b, g, r = cv.split(bright)
@@ -167,10 +179,19 @@ def additive_brightness(image, additive):
     # Add additive brightness to every R, G and B component
     for w in range(width):
         for h in range(height):
-            r[w][h], g[w][h], b[w][h] = calculate_add_bright(r[w][h], g[w][h], b[w][h], additive)
+            # The new brightness according to function argument "calculate"
+            r[w][h], g[w][h], b[w][h] = calculate(r[w][h], g[w][h], b[w][h], factor)
 
             bright[w][h][2] = r[w][h]
             bright[w][h][1] = g[w][h]
             bright[w][h][0] = b[w][h]
 
     return bright
+
+
+def additive_brightness(image, factor):
+    return modify_brightness(image, factor, calculate_add_bright)
+
+
+def multiplicative_brightness(image, factor):
+    return modify_brightness(image, factor, calculate_mult_bright)
