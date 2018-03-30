@@ -4,22 +4,20 @@ import cv2 as cv
 import color
 import util
 
+# An image is a matrix with the dimensions [w][h][3]. 3 for R, G and B
 
-# TODO: Fix conversions. YIQ to RGB doesn't show the original image.
+name = "32bits.png"
+original = util.read_image(name)
 
-img_name = "skate.jpg"
-original_img = util.read_image(img_name)
+# RGB to YIQ
+yiq = color.rgb_to_yiq(original)
+cv.imshow('YIQ', yiq)
+util.write_image("yiq-" + name, yiq)
 
-# RGB-YIQ
-yiq_img = color.rgb_to_yiq(original_img)
-cv.imshow(img_name + ' - YIQ', yiq_img)
-util.write_image("yiq-" + img_name, yiq_img)
-
-# YIQ-RGB
-rgb_img = color.yiq_to_rgb(yiq_img)
-cv.imshow(img_name + ' - RGB', rgb_img)
-util.write_image("rgb-" + img_name, rgb_img)
+# YIQ to RGB
+rgb = color.yiq_to_rgb(yiq)
+cv.imshow('RGB', rgb)
+util.write_image("rgb-" + name, rgb)
 
 cv.waitKey(0)
 cv.destroyAllWindows()
-

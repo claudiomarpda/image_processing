@@ -7,56 +7,81 @@ import numpy as np
 import cv2 as cv
 
 
+def check_8bytes_bound(x):
+    x = np.rint(x)
+
+    if x > 255:
+        return 255
+    elif x < 0:
+        return 0
+
+    return x
+
+
 def calculate_rgb_to_yiq(r, g, b):
     y = 0.299 * r + 0.587 * g + 0.114 * b
     i = 0.596 * r - 0.274 * g - 0.322 * b
     q = 0.211 * r - 0.523 * g + 0.312 * b
-    return np.trunc(y), np.trunc(i), np.trunc(q)
+
+    y = check_8bytes_bound(y)
+    i = check_8bytes_bound(i)
+    q = check_8bytes_bound(q)
+
+    return y, i, q
 
 
 def rgb_to_yiq(image):
-    # TODO: Handle R, G and B limits during conversion
-
     # Get RGB components from the image
     b, g, r = cv.split(image)
 
     # Create an empty matrix with the dimension of the input image
-    yiq_img = np.empty_like(image)
+    yiq = np.empty_like(image)
 
-    # Calculate YIQ for the whole matrix
-    y, i, q = calculate_rgb_to_yiq(r, g, b)
+    width = image.shape[0]
+    height = image.shape[1]
 
-    # Set YIQ in the output image
-    # R, G and B, respectively
-    yiq_img[:, :, 2] = y
-    yiq_img[:, :, 1] = i
-    yiq_img[:, :, 0] = q
+    # Calculate YIQ from the input image, pixel by pixel
 
-    return yiq_img
+    for w in range(width):
+        for h in range(height):
+            y, i, q = calculate_rgb_to_yiq(r[w][h], g[w][h], b[w][h])
+            yiq[w][h][2] = y
+            yiq[w][h][1] = i
+            yiq[w][h][0] = q
+
+    return yiq
 
 
 def calculate_yiq_to_rgb(y, i, q):
     r = y + 0.956 * i + 0.621 * q
     g = y - 0.272 * i - 0.647 * q
     b = y - 1.106 * i + 1.703 * q
-    return np.trunc(r), np.trunc(g), np.trunc(b)
+
+    r = check_8bytes_bound(r)
+    g = check_8bytes_bound(g)
+    b = check_8bytes_bound(b)
+
+    return r, g, b
 
 
 def yiq_to_rgb(image):
-    # TODO: Handle R, G and B limits during conversion
-
     # Get YIQ components from the image
     q, i, y = cv.split(image)
 
     # Create an empty matrix with the dimension of the input image
-    rgb_img = np.empty_like(image)
+    rgb = np.empty_like(image)
 
-    # Calculate YIQ for the whole matrix
-    r, g, b = calculate_rgb_to_yiq(y, i, q)
+    width = image.shape[0]
+    height = image.shape[1]
 
-    # Set RGB in the output image
-    rgb_img[:, :, 2] = r
-    rgb_img[:, :, 1] = g
-    rgb_img[:, :, 0] = b
+    # Calculate RGB from the input image, pixel by pixel
 
-    return rgb_img
+    for w in range(width):
+        for h in range(height):
+            r, g, b = calculate_yiq_to_rgb(y[w][h], i[w][h], q[w][h])
+
+            rgb[w][h][2] = r
+            rgb[w][h][1] = g
+            rgb[w][h][0] = b
+
+    return rgb
