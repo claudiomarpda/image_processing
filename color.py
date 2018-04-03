@@ -9,7 +9,6 @@ import cv2 as cv
 
 def check_8bytes_bounds(x):
     x = np.rint(x)
-
     if x > 255:
         return 255
     elif x < 0:
@@ -68,7 +67,6 @@ def yiq_to_rgb(image):
     # Get YIQ components from the image
     q, i, y = cv.split(image)
 
-    # Create an empty matrix with the dimension of the input image
     rgb = np.empty_like(image)
 
     width = image.shape[0]
@@ -87,25 +85,49 @@ def yiq_to_rgb(image):
     return rgb
 
 
-def mono_red(image):
-    mono = np.copy(image)
-    mono[:, :, 1] = 0
-    mono[:, :, 0] = 0
-    return mono
+def red_band(image):
+    output = np.copy(image)
+    output[:, :, 1] = 0
+    output[:, :, 0] = 0
+    return output
 
 
-def mono_green(image):
-    mono = np.copy(image)
-    mono[:, :, 2] = 0
-    mono[:, :, 0] = 0
-    return mono
+def green_band(image):
+    output = np.copy(image)
+    output[:, :, 2] = 0
+    output[:, :, 0] = 0
+    return output
 
 
-def mono_blue(image):
-    mono = np.copy(image)
-    mono[:, :, 2] = 0
-    mono[:, :, 1] = 0
-    return mono
+def blue_band(image):
+    output = np.copy(image)
+    output[:, :, 2] = 0
+    output[:, :, 1] = 0
+    return output
+
+
+def monochromatic_red(image):
+    output = np.copy(image)
+    r = output[:, :, 2]
+    output[:, :, 1] = r
+    output[:, :, 0] = r
+    return output
+
+
+def monochromatic_green(image):
+    output = np.copy(image)
+    g = output[:, :, 1]
+    output[:, :, 2] = g
+    output[:, :, 0] = g
+    return output
+
+
+def monochromatic_blue(image):
+    output = np.copy(image)
+    b = output[:, :, 0]
+    output[:, :, 2] = b
+    output[:, :, 1] = b
+    return output
 
 
 def calculate_rgb_to_gray(r, g, b):
@@ -117,7 +139,6 @@ def rgb_to_gray(image):
     # Get RGB components from the image
     b, g, r = cv.split(image)
 
-    # Create an empty matrix with the dimension of the input image
     gray = np.empty_like(image)
 
     width = image.shape[0]
@@ -134,7 +155,6 @@ def rgb_to_gray(image):
 
 
 def rgb_to_negative(image):
-    # Create an empty matrix with the dimension of the input image
     negative = np.empty_like(image)
 
     negative[:, :, 2] = 255 - image[:, :, 2]
