@@ -15,9 +15,13 @@ name = "skate.jpg"
 original = util.read_image(name)
 
 bright = color.additive_brightness(original, BRIGHTNESS_FACTOR)
-
 cv.imshow('Additive Brightness', bright)
-util.write_image("add-bright-" + name, bright)
+util.write_image("rgb-add-bright-" + name, bright)
+
+yiq = color.rgb_to_yiq(original)
+bright = color.additive_brightness(yiq, BRIGHTNESS_FACTOR)
+cv.imshow('Additive Brightness', bright)
+util.write_image("yiq-add-bright-" + name, bright)
 
 cv.waitKey(0)
 cv.destroyAllWindows()

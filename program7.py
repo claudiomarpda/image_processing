@@ -13,12 +13,12 @@ name = "lenna-noise.png"
 original = util.read_image(name)
 cv.imshow('Original', original)
 
-# Average Filter
+# Average
 average = filter.average(original, KERNEL)
 cv.imshow('Average Filter', average)
 util.write_image("average-filter-" + name, average)
 
-# Median Filter
+# Median
 median = filter.median(original, KERNEL)
 cv.imshow('Median Filter', median)
 util.write_image("median-filter-" + name, median)
