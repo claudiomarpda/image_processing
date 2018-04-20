@@ -116,7 +116,7 @@ def monochromatic_red(image):
 
 def monochromatic_green(image):
     output = np.copy(image)
-    g = output[:, :, 1]
+    g = output[:, :, 0]
     output[:, :, 2] = g
     output[:, :, 0] = g
     return output
@@ -154,14 +154,14 @@ def rgb_to_gray(image):
     return gray
 
 
-def rgb_to_negative(image):
-    negative = np.empty_like(image)
+def negative(image):
+    neg = np.empty_like(image)
 
-    negative[:, :, 2] = 255 - image[:, :, 2]
-    negative[:, :, 1] = 255 - image[:, :, 1]
-    negative[:, :, 0] = 255 - image[:, :, 0]
+    neg[:, :, 2] = 255 - image[:, :, 2]
+    neg[:, :, 1] = 255 - image[:, :, 1]
+    neg[:, :, 0] = 255 - image[:, :, 0]
 
-    return negative
+    return neg
 
 
 def calculate_add_bright(r, g, b, factor):
