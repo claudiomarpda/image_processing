@@ -1,14 +1,14 @@
 import cv2 as cv
 
-PATH = "img/"
+IMG_PATH = 'img/'
 
 
 def read_image(name):
-    return cv.imread(PATH + name)
+    return cv.imread(IMG_PATH + name)
 
 
 def write_image(name, image):
-    cv.imwrite(PATH + name, image)
+    cv.imwrite(IMG_PATH + name, image)
 
 
 def check_8bytes_bounds(x):
@@ -20,7 +20,7 @@ def check_8bytes_bounds(x):
     return x
 
 
-def check_matrix_bounds(matrix):
+def check_img_pixels_bounds(matrix):
     # Image width and height
     w = matrix.shape[1]
     h = matrix.shape[0]
