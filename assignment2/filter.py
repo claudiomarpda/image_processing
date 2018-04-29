@@ -7,6 +7,9 @@ _8BITS = 256
 def convolution(img, kernel, offset):
     output = np.zeros_like(img)
 
+    # Flip the kernel up to down and left to right
+    kernel = np.flipud(np.fliplr(kernel))
+
     # image width and height
     iw = output.shape[1]
     ih = output.shape[0]
@@ -15,98 +18,53 @@ def convolution(img, kernel, offset):
     kw = np.shape(kernel)[1]
     kh = np.shape(kernel)[0]
 
-    print(kernel)
-    print(np.shape(kernel))
-
-    global sum
-
     # Kernel edges
     # We gonna use filters like
     #   3x3 (One central point plus 1 point around):
     #       3 // 2 = 1
-
     kw_edge = kw // 2
     kh_edge = kh // 2
 
-    # Iterate the matrix
+    global _sum
+
     # Rows
     for ir in range(0, ih, offset):
         for ic in range(0, iw, offset):
             # Sum is the RGB value that starts with 0 for every pixel
             # sum = [0, 0, 0]
-            sum = np.zeros(3)
+            _sum = np.zeros(3)
 
             # Go through the kernel
             for kr in range(kh):
+                # Pixel row
+                py = ir - kh_edge + kr
+                # Check invalid indexes of the image, the kernel edges
+                if py < 0 or py >= ih:
+                    continue
+
                 for kc in range(kw):
-
-                    # Pixel
-                    # py is row
-                    py = ir - kh_edge + kr
-                    # px is column
+                    # Pixel column
                     px = ic - kw_edge + kc
-
-                    # Check invalid indexes of the image, the edges
-                    if (py < 0 or py >= ih) or (px < 0 or px >= iw):
-                        # The same as adding 0
+                    # Check invalid indexes of the image, the kernel edges
+                    if px < 0 or px >= iw:
                         continue
 
                     # Apply kernel on every pixel
-                    #   RGB * kernel
-                    #   [b, g, r] * kernel[kr, kc]
-                    #   Example:
-                    #       [101, 102, 103] * 1
-                    # sum += img[py, px] * kernel[kr, kc]
-                    r = int(img[py, px, 2] * kernel[kr, kc])
-                    # print('r ' + str(r))
-                    g = int(img[py, px, 1] * kernel[kr, kc])
-                    b = int(img[py, px, 0] * kernel[kr, kc])
+                    r = img[py, px, 2] * kernel[kr, kc]
+                    g = img[py, px, 1] * kernel[kr, kc]
+                    b = img[py, px, 0] * kernel[kr, kc]
 
-                    # r = util.check_8bits_bounds(r)
-                    # g = util.check_8bits_bounds(g)
-                    # b = util.check_8bits_bounds(b)
+                    _sum[2] += r
+                    _sum[1] += g
+                    _sum[0] += b
 
-                    sum[2] += r
-                    sum[1] += g
-                    sum[0] += b
+            _sum[2] = util.check_8bits_bounds(_sum[2])
+            _sum[1] = util.check_8bits_bounds(_sum[1])
+            _sum[0] = util.check_8bits_bounds(_sum[0])
 
-            output[ir, ic, 2] = sum[2]
-            output[ir, ic, 1] = sum[1]
-            output[ir, ic, 0] = sum[0]
-
-    output = util.check_img_pixels_bounds(output)
-    return output
-
-
-def convolution2(img, kernel):
-    output = np.zeros_like(img)
-
-    # Image width and height
-    iw = output.shape[1]
-    ih = output.shape[0]
-
-    # Kernel height
-    kh = np.shape(kernel)[0]
-
-    # Considering a kernel NxN
-    # We gonna use 3x3
-    #   3x3 (One central point plus 1 point around):
-    #       3 // 2 = 1
-    #       Integer division
-    kernel_edge = kh // 2
-
-    for c in range(kernel_edge, iw - kernel_edge):
-        for r in range(kernel_edge, ih - kernel_edge):
-            img_kernel = img[
-                         r - kernel_edge:r + kernel_edge + 1,
-                         c - kernel_edge:c + kernel_edge + 1]
-
-            # apply filter on the kernel
-            output[r, c, 2] = np.sum(img_kernel[:, :, 2] * kernel)  # R
-            output[r, c, 1] = np.sum(img_kernel[:, :, 1] * kernel)  # G
-            output[r, c, 0] = np.sum(img_kernel[:, :, 0] * kernel)  # B
-
-    output = util.check_img_pixels_bounds(output)
+            output[ir, ic, 2] = _sum[2]
+            output[ir, ic, 1] = _sum[1]
+            output[ir, ic, 0] = _sum[0]
 
     return output
 
