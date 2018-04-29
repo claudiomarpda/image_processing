@@ -5,7 +5,7 @@ import util
 
 def calculate_rgb_to_gray(r, g, b):
     gray = 0.299 * r + 0.587 * g + 0.114 * b
-    return util.check_8bytes_bounds(gray)
+    return util.check_8bits_bounds(gray)
 
 
 def rgb_to_gray(image):

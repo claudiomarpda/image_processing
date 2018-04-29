@@ -12,7 +12,7 @@ def write_image(name, image):
     cv.imwrite(PATH + name, image)
 
 
-def check_8bytes_bounds(x):
+def check_8bits_bounds(x):
     x = rint(x)
     if x > 255:
         return 255

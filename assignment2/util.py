@@ -11,7 +11,7 @@ def write_image(name, image):
     cv.imwrite(IMG_PATH + name, image)
 
 
-def check_8bytes_bounds(x):
+def check_8bits_bounds(x):
     if x > 255:
         return 255
     elif x < 0:
@@ -42,6 +42,6 @@ def check_img_pixels_bounds(matrix):
                     matrix[r, c, i] = 255
 
                 # Check bounds
-                matrix[r, c, i] = check_8bytes_bounds(matrix[r, c, i])
+                matrix[r, c, i] = check_8bits_bounds(matrix[r, c, i])
 
     return matrix

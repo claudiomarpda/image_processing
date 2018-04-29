@@ -92,7 +92,7 @@ def sobel_y(image):
 
 def sobel_xy(image):
     return (kernel_area(image, calculate_sobel_x) +
-           kernel_area(image, calculate_sobel_y)) / 2
+            kernel_area(image, calculate_sobel_y)) / 2
 
 
 def sobel_xy2(image):
@@ -138,3 +138,51 @@ def custom_filter1(image):
 
 def custom_filter2(image):
     return kernel_area(image, calculate_custom_filter2)
+
+
+c = 1
+d = 1
+
+# Sharpness filters
+mask1 = [[
+    [0, -c, 0],
+    [-c, (4 * c) + d, -c],
+    [0, -c, 0]
+]]
+
+mask2 = [[
+    [-c, -c, -c],
+    [-c, (8 * c) + d, -c],
+    [-c, -c, -c]
+]]
+
+# Edge detection
+mask3 = [[
+    [- 1 / 8, - 1 / 8, - 1 / 8],
+    [- 1 / 8, 1, - 1 / 8],
+    [- 1 / 8, - 1 / 8, - 1 / 8]
+]]
+
+
+def calc_f1(image):
+    return image * mask1
+
+
+def calc_f2(image):
+    return image * mask2
+
+
+def calc_f3(image):
+    return image * mask3
+
+
+def custom_f1(image):
+    return kernel_area(image, calc_f1)
+
+
+def custom_f2(image):
+    return kernel_area(image, calc_f2)
+
+
+def custom_f3(image):
+    return kernel_area(image, calc_f3)

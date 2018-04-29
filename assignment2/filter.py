@@ -48,6 +48,7 @@ def convolution(img, kernel, offset):
 
                     # Check invalid indexes of the image, the edges
                     if (py < 0 or py >= ih) or (px < 0 or px >= iw):
+                        # The same as adding 0
                         continue
 
                     # Apply kernel on every pixel
@@ -55,9 +56,23 @@ def convolution(img, kernel, offset):
                     #   [b, g, r] * kernel[kr, kc]
                     #   Example:
                     #       [101, 102, 103] * 1
-                    sum += img[py, px] * kernel[kr, kc]
+                    # sum += img[py, px] * kernel[kr, kc]
+                    r = int(img[py, px, 2] * kernel[kr, kc])
+                    # print('r ' + str(r))
+                    g = int(img[py, px, 1] * kernel[kr, kc])
+                    b = int(img[py, px, 0] * kernel[kr, kc])
 
-            output[ir, ic] = sum
+                    # r = util.check_8bits_bounds(r)
+                    # g = util.check_8bits_bounds(g)
+                    # b = util.check_8bits_bounds(b)
+
+                    sum[2] += r
+                    sum[1] += g
+                    sum[0] += b
+
+            output[ir, ic, 2] = sum[2]
+            output[ir, ic, 1] = sum[1]
+            output[ir, ic, 0] = sum[0]
 
     output = util.check_img_pixels_bounds(output)
     return output
@@ -117,7 +132,7 @@ def calc_expansion(r, r_min, r_max, l):
 def histogram_expansion(img, l):
     """
     Histogram Expansion is a point technique that takes in count
-    which gray scale value individually.
+    each gray scale value individually.
     Calculate gray scale values according to lightness intensity.
 
     :param img: Gray scale image with R = B = G
@@ -148,7 +163,7 @@ def histogram_expansion(img, l):
                 # Assuming R = G = B
                 # Get the value of one channel (0 = blue)
                 pixel[i] = calc_expansion(img[r, c, 0], _min, _max, l)
-                pixel[i] = util.check_8bytes_bounds(pixel[i])
+                pixel[i] = util.check_8bits_bounds(pixel[i])
 
             output[r, c, :] = pixel
 
@@ -215,7 +230,7 @@ def histogram_equalization(img):
     for l in range(_8BITS):
         acc += histogram[l]
         distribution[l] = calc_equalization(_8BITS, ih, iw, acc)
-        distribution[l] = util.check_8bytes_bounds(distribution[l])
+        distribution[l] = util.check_8bits_bounds(distribution[l])
 
     # Updating image with equalized values
     for r in range(ih):
