@@ -8,11 +8,6 @@ import numpy as np
 import color
 import util
 
-c = 1
-d = 1
-
-# Edge detection filters
-
 kernel_b1 = np.array([
     [- 1 / 8, - 1 / 8, - 1 / 8],
     [- 1 / 8, 1, - 1 / 8],
@@ -36,8 +31,6 @@ kernel_b4 = np.array([
     [-1, 0, 1],
     [0, 1, 1]
 ])
-
-_offset = 1
 
 # Original
 name = "monkey.jpg"

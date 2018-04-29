@@ -8,11 +8,6 @@ import numpy as np
 import color
 import util
 
-c = 1
-d = 1
-
-# Edge detection filters
-
 kernel_b1 = np.array([
     [- 1 / 8, - 1 / 8, - 1 / 8],
     [- 1 / 8, 1, - 1 / 8],
