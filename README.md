@@ -45,6 +45,7 @@ Note: If the script doesn't run, it may be necessary to give the following permi
 * https://en.wikipedia.org/wiki/Negative_(photography)
 * https://en.wikipedia.org/wiki/Grayscale
 * https://en.wikipedia.org/wiki/Thresholding_(image_processing)
+* https://en.wikipedia.org/wiki/Kernel_(image_processing)
 * https://en.wikipedia.org/wiki/Sobel_operator
 * https://en.wikipedia.org/wiki/Discrete_Laplace_operator
 * https://www.allaboutcircuits.com/technical-articles/image-histogram-characteristics-machine-learning-image-processing/
