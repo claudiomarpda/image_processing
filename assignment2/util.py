@@ -1,4 +1,5 @@
 import cv2 as cv
+import filter
 
 IMG_PATH = 'img/'
 
@@ -45,3 +46,15 @@ def check_img_pixels_bounds(matrix):
                 matrix[r, c, i] = check_8bits_bounds(matrix[r, c, i])
 
     return matrix
+
+
+def do_convolution_show_and_write(img, kernel, out_name, offset):
+    output = filter.convolution(img, kernel, offset)
+    cv.imshow(out_name, output)
+    write_image(out_name, output)
+
+
+def cv_do_convolution_show_and_write(img, kernel, out_name):
+    output = cv.filter2D(src=img, kernel=kernel, ddepth=-1)
+    cv.imshow(out_name, output)
+    write_image(out_name, output)
