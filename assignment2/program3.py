@@ -43,5 +43,11 @@ img_expansion = filter.histogram_expansion(img_equalization, lightness)
 cv.imshow('Histogram Equalization + Expansion L=' + str(lightness), img_expansion)
 util.write_image('hist-eq-exp-l' + str(lightness) + '-' + name, img_expansion)
 
+# Equalization with OpenCV
+img_cv = cv.imread('img/monkey.jpg', 0)
+cv_eq = cv.equalizeHist(img_cv)
+cv.imshow("OpenCV Equalization", cv_eq)
+util.write_image('cv-eq-' + name, cv_eq)
+
 cv.waitKey(0)
 cv.destroyAllWindows()
