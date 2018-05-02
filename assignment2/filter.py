@@ -151,7 +151,7 @@ def histogram_equalization(img):
     """
     Histogram Equalization can produce a richer image visually.
     It aims to produce a image with uniform gray scale values.
-    It is a local technique that takes in count the occurrence of
+    It is a technique that takes in count the occurrence of
     all image's pixels with the same gray scale vale.
 
     Uses a 8 bits distribution (256 values, 0 to 255).
