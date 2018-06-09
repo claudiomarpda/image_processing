@@ -25,10 +25,11 @@ def theta(n, k):
     return (k * math.pi) / (2.0 * n)
 
 
-def transform_1d(signals):
+def transform_1d(signals, coef=0):
     """
     One dimensional DCT
     :param signals: 1d vector with all signals
+    :param coef: number of significant coefficients to be preserved. 0 to preserve all of them.
     :return: 1d vector with new signals
     """
 
@@ -43,6 +44,11 @@ def transform_1d(signals):
             _sum += signals[i] * math.cos(2 * math.pi * freq(n, k) * i + theta(n, k))
 
         new_signals[k] = math.sqrt(2.0 / n) * ck(k) * _sum
+
+    if coef > 0:
+        new_signals.sort()
+        for i in range(coef, n):
+            new_signals[i] = 0
 
     return new_signals
 
@@ -90,10 +96,11 @@ def i_transform_2d(signals):
     return new_signals_2
 
 
-def transform_2d(signals):
+def transform_2d(signals, coef=0):
     """
      Bidimensional DCT
      :param signals: 2d vector with all signals
+     :param coef: number of significant coefficients to be preserved. 0 to preserve all of them.
      :return: 2d vector with new signals
      """
 
@@ -104,9 +111,9 @@ def transform_2d(signals):
 
     # Apply DCT on all rows
     for h in range(height):
-        new_signals_1[h, :] = transform_1d(signals[h, :])
+        new_signals_1[h, :] = transform_1d(signals[h, :], coef)
     # Apply DCT on all columns of the previous result
     for w in range(width):
-        new_signals_2[:, w] = transform_1d(new_signals_1[:, w])
+        new_signals_2[:, w] = transform_1d(new_signals_1[:, w], coef)
 
     return new_signals_2
