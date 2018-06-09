@@ -40,10 +40,9 @@ def transform_1d(signals):
         _sum = 0
         # Through all signals
         for i in range(n):
-            _sum += ck(k) * signals[i] * math.cos(2 * math.pi * freq(n, k) * i + theta(n, k))
+            _sum += signals[i] * math.cos(2 * math.pi * freq(n, k) * i + theta(n, k))
 
-        _sum *= math.sqrt(2.0 / n)
-        new_signals[k] = _sum
+        new_signals[k] = math.sqrt(2.0 / n) * ck(k) * _sum
 
     return new_signals
 
@@ -63,27 +62,51 @@ def i_transform_1d(signals):
         # Through cosines
         for k in range(n):
             _sum += ck(k) * signals[k] * math.cos(2 * math.pi * freq(n, k) * i + theta(n, k))
-        _sum *= math.sqrt(2.0 / n)
-        new_signals[i] = _sum
+
+        new_signals[i] = math.sqrt(2.0 / n) * _sum
 
     return new_signals
 
 
-def transform_2d(signals, inverse=False):
+def i_transform_2d(signals):
     """
-    Bi dimensional DCT
-    :param inverse: true for IDCT
+    Bidimensional IDCT
     :param signals: 2d vector with all signals
     :return: 2d vector with new signals
     """
 
-    rows = signals.shape[0]
-    new_signals = np.zeros_like(signals).astype(float)
+    height = signals.shape[0]
+    width = signals.shape[1]
+    new_signals_1 = np.zeros_like(signals).astype(float)
+    new_signals_2 = np.zeros_like(signals).astype(float)
 
-    for r in range(rows):
-        if inverse:
-            new_signals[r] = i_transform_1d(signals[r, :])
-        else:
-            new_signals[r] = transform_1d(signals[r, :])
+    # Apply IDCT on all rows
+    for h in range(height):
+        new_signals_1[h, :] = i_transform_1d(signals[h, :])
+    # Apply IDCT on all columns of the previous result
+    for w in range(width):
+        new_signals_2[:, w] = i_transform_1d(new_signals_1[:, w])
 
-    return new_signals
+    return new_signals_2
+
+
+def transform_2d(signals):
+    """
+     Bidimensional DCT
+     :param signals: 2d vector with all signals
+     :return: 2d vector with new signals
+     """
+
+    height = signals.shape[0]
+    width = signals.shape[1]
+    new_signals_1 = np.zeros_like(signals).astype(float)
+    new_signals_2 = np.zeros_like(signals).astype(float)
+
+    # Apply DCT on all rows
+    for h in range(height):
+        new_signals_1[h, :] = transform_1d(signals[h, :])
+    # Apply DCT on all columns of the previous result
+    for w in range(width):
+        new_signals_2[:, w] = transform_1d(new_signals_1[:, w])
+
+    return new_signals_2

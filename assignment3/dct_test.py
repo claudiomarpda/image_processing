@@ -30,7 +30,7 @@ class TestDCT(unittest.TestCase):
         print(new_signals)
         print('-------')
 
-        i_signals = dct.transform_2d(new_signals, True)
+        i_signals = dct.i_transform_2d(new_signals)
         print('Inverse transform')
         print(signals)
         print('=======')
