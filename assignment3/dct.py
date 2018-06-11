@@ -25,7 +25,7 @@ def theta(n, k):
     return (k * math.pi) / (2.0 * n)
 
 
-def transform_1d(signals, coef=0):
+def transform_1d(signals):
     """
     One dimensional DCT
     :param signals: 1d vector with all signals
@@ -106,16 +106,29 @@ def transform_2d(signals, coef=0):
 
     # Apply DCT on all rows
     for h in range(height):
-        new_signals_1[h, :] = transform_1d(signals[h, :], coef)
+        new_signals_1[h, :] = transform_1d(signals[h, :])
     # Apply DCT on all columns of the previous result
     for w in range(width):
-        new_signals_2[:, w] = transform_1d(new_signals_1[:, w], coef)
+        new_signals_2[:, w] = transform_1d(new_signals_1[:, w])
 
-    # Flat the 2D array in 1D
-    new_signals_2 = new_signals_2.sort(np.array(new_signals_2).ravel())
-    # Sort the 1D array in decreasing order
-    new_signals_2 = new_signals_2[::-1]
-    # Go back from 1D to 2D
-    new_signals_2 = np.reshape(new_signals_2, (-1, height))
+    if coef > 0:
+        # Flat the 2D array in 1D
+        new_signals_3 = np.sort(np.array(new_signals_2).ravel())
+        # Sort the 1D array in decreasing order
+        new_signals_3 = new_signals_3[::-1]
+
+        for i in range(coef - 1, width * height):
+            new_signals_3[i] = 0
+
+        # Go back from 1D to 2D
+        new_signals_3 = np.reshape(new_signals_3, (-1, height))
+
+        for w in range(width):
+            for h in range(height):
+                for c in range(coef):
+                    if new_signals_2[h, w] == new_signals_3[c]:
+                        continue
+                    else:
+                        new_signals_2[h, w] = 0
 
     return new_signals_2
