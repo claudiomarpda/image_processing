@@ -45,11 +45,6 @@ def transform_1d(signals, coef=0):
 
         new_signals[k] = math.sqrt(2.0 / n) * ck(k) * _sum
 
-    if coef > 0:
-        new_signals.sort()
-        for i in range(coef, n):
-            new_signals[i] = 0
-
     return new_signals
 
 
@@ -115,5 +110,12 @@ def transform_2d(signals, coef=0):
     # Apply DCT on all columns of the previous result
     for w in range(width):
         new_signals_2[:, w] = transform_1d(new_signals_1[:, w], coef)
+
+    # Flat the 2D array in 1D
+    new_signals_2 = new_signals_2.sort(np.array(new_signals_2).ravel())
+    # Sort the 1D array in decreasing order
+    new_signals_2 = new_signals_2[::-1]
+    # Go back from 1D to 2D
+    new_signals_2 = np.reshape(new_signals_2, (-1, height))
 
     return new_signals_2
